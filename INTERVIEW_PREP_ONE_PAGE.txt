@@ -1,0 +1,76 @@
+RALLY BOARD - ONE PAGE INTERVIEW PREP
+=====================================
+
+Project in one line
+- Full-stack Rally-style board with React frontend, Express backend, and MySQL (PostgreSQL optional).
+
+Core features
+- View stories by lane: Backlog, In Progress, Review, Done
+- Create story
+- Move story between lanes
+- Delete story
+- Search and priority filter
+
+Top 8 modules to explain
+========================
+
+1) backend/src/server.js
+- Main API layer: routes, validation, DTO mapping, error handler.
+- Endpoints: /health, GET/POST/PATCH/DELETE /api/stories.
+- Interview line: "This is the orchestration layer where request validation and business flow happen."
+
+2) backend/src/db/pool.js
+- DB abstraction for MySQL default and PostgreSQL optional mode.
+- Exposes unified query() and end().
+- Interview line: "I isolated database engine differences behind one adapter."
+
+3) backend/src/config.js
+- Loads env vars and runtime settings.
+- Supports DB mode selection via DB_CLIENT.
+- Interview line: "Centralized config made deployment and DB switching safer."
+
+4) backend/src/db/schema.sql
+- Stories table schema and constraints.
+- Uses unique code, typed enums, timestamps, and status index.
+- Interview line: "I enforced integrity at DB level, not only API level."
+
+5) backend/src/db/seed.js
+- Applies schema + inserts seed data.
+- Makes demo/test setup reproducible.
+- Interview line: "One command prepares a consistent local environment."
+
+6) frontend/my-app/src/App.tsx
+- Main page logic and state.
+- Fetches stories, performs CRUD calls, computes filtered lane data.
+- Interview line: "I used App as the data container and UI coordinator."
+
+7) frontend/my-app/src/App.css
+- Board UI styling and responsive layout.
+- Interview line: "I separated visual design from behavior for maintainability."
+
+8) frontend/my-app/src/main.tsx
+- React bootstrap entry point.
+- Interview line: "This mounts the app and starts the client runtime."
+
+API summary
+===========
+- GET /health
+- GET /api/stories
+- POST /api/stories
+- PATCH /api/stories/:id
+- DELETE /api/stories/:id
+
+60-second pitch
+===============
+"I built a Rally-style planning board using React and Express. The frontend fetches stories, groups them into workflow lanes, and supports create, move, delete, search, and filtering. The backend validates input, exposes REST endpoints, and maps DB rows to a clean API contract. I added a database adapter so the same backend can run on MySQL by default and PostgreSQL optionally. I also included schema and seed automation for reproducible setup."
+
+Common follow-up answers
+========================
+Q: Why both API validation and DB constraints?
+A: API validation improves UX; DB constraints guarantee integrity system-wide.
+
+Q: Why add DB abstraction?
+A: It keeps feature code stable while allowing engine flexibility.
+
+Q: Next improvements?
+A: Auth, drag-and-drop UX, endpoint integration tests, and pagination/filter APIs.

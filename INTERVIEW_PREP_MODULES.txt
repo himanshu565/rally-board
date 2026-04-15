@@ -1,0 +1,237 @@
+RALLY BOARD - INTERVIEW PREP MODULE GUIDE
+=========================================
+
+How to use this document
+- Use this as a quick script when explaining your project architecture.
+- Speak in this order: frontend flow -> backend flow -> database flow.
+- Emphasize decisions, trade-offs, and error handling.
+
+
+PROJECT OVERVIEW
+================
+This is a full-stack Rally-style board application.
+- Frontend: React + Vite + TypeScript
+- Backend: Node.js + Express
+- Database: MySQL (default), PostgreSQL optional
+
+The app supports:
+- View stories by lane (Backlog, In Progress, Review, Done)
+- Create stories
+- Move stories across lanes
+- Delete stories
+- Search and priority filtering
+
+
+ROOT FILES
+==========
+
+1) README.md
+What it does:
+- Gives full setup and run steps for frontend and backend.
+- Documents architecture and features.
+Interview line:
+- "I kept a single root README to make onboarding quick and reduce setup friction for new developers."
+
+2) INTERVIEW_PREP_MODULES.txt
+What it does:
+- This file. Structured interview explanation notes.
+Interview line:
+- "I document both code and communication so I can explain the system clearly in interviews and team demos."
+
+
+BACKEND MODULES
+===============
+
+3) backend/package.json
+What it does:
+- Defines backend dependencies and scripts.
+Key scripts:
+- npm run dev: starts with nodemon
+- npm run start: production-style start
+- npm run db:seed: creates schema and sample data
+- npm test: runs Jest tests
+Interview line:
+- "I separated dev/start/seed scripts so setup, testing, and runtime operations are explicit and repeatable."
+
+4) backend/.env
+What it does:
+- Stores local runtime configuration (port, DB credentials, CORS origin).
+Interview line:
+- "I externalized environment-specific values so code stays portable across local/dev/prod."
+
+5) backend/.env.example
+What it does:
+- Template for required environment variables.
+Interview line:
+- "I provide an env template to prevent missing-config errors during setup."
+
+6) backend/README.md
+What it does:
+- Backend-only setup, DB prep, API routes, and run commands.
+Interview line:
+- "I keep service-level docs to allow independent development of frontend and backend."
+
+7) backend/src/config.js
+What it does:
+- Loads .env via dotenv.
+- Normalizes runtime config.
+- Supports DB_CLIENT=mysql by default and DB_CLIENT=postgres optionally.
+Interview line:
+- "I centralized configuration and added mode-based DB selection to keep the backend flexible without touching business logic."
+
+8) backend/src/server.js
+What it does:
+- Main Express app.
+- Registers middleware (CORS, JSON parsing).
+- Implements API routes and validation.
+- Converts DB rows to frontend-friendly DTO shape.
+- Bootstraps schema on startup.
+Important responsibilities:
+- validateStoryBody: input validation for create/update
+- toDto: maps DB column names to API field names
+- /health: DB health check endpoint
+- CRUD endpoints for stories
+Interview line:
+- "server.js is the API orchestration layer: validation, route handling, response shaping, and centralized error handling."
+
+9) backend/src/db/pool.js
+What it does:
+- Database abstraction layer.
+- Creates MySQL or PostgreSQL pool depending on DB_CLIENT.
+- Exposes a unified query() API and end() function.
+Why this matters:
+- The rest of backend calls pool.query() without caring about DB engine.
+Interview line:
+- "I added a thin DB adapter so the service can switch engines with minimal code impact."
+
+10) backend/src/db/schema.sql
+What it does:
+- Defines stories table schema and status index.
+Schema highlights:
+- Story code is unique
+- Priority/kind/status are constrained via ENUM
+- Tracks created_at and updated_at
+Interview line:
+- "I designed schema constraints to enforce data quality at the database layer, not only in API validation."
+
+11) backend/src/db/seed.js
+What it does:
+- Reads schema.sql and applies it.
+- Clears stories table and inserts sample records.
+Interview line:
+- "I automated schema and seed setup so demo and test environments can be reproduced quickly."
+
+12) backend/src/data/seedStories.js
+What it does:
+- Holds sample story objects used by seed.js.
+Interview line:
+- "I separated seed data from seed logic for clarity and easier data updates."
+
+13) backend/__tests__/smoke.test.js
+What it does:
+- Verifies test infrastructure is running.
+Interview line:
+- "I keep a smoke test to ensure CI/test pipeline health before adding feature-level tests."
+
+
+FRONTEND MODULES
+================
+
+14) frontend/my-app/package.json
+What it does:
+- Defines frontend scripts and dependencies.
+Key scripts:
+- npm run dev
+- npm run build
+- npm run lint
+- npm run preview
+Interview line:
+- "I use Vite for fast local iteration and TypeScript build checks during production builds."
+
+15) frontend/my-app/src/main.tsx
+What it does:
+- Frontend entry point.
+- Mounts App component into root element.
+Interview line:
+- "main.tsx is the application bootstrap where React rendering starts."
+
+16) frontend/my-app/src/App.tsx
+What it does:
+- Core UI and state management.
+- Loads stories from backend API.
+- Handles create/update/delete actions.
+- Supports lane grouping, search, priority filtering.
+- Computes summary stats.
+Core logic blocks:
+- loadStories(): GET data from API
+- createStory(): POST new story
+- updateStory(): PATCH status/fields
+- deleteStory(): DELETE story
+- boardData useMemo: lane-wise filtered data model
+Interview line:
+- "App.tsx acts as the page-level container managing remote data, form interactions, and derived board state."
+
+17) frontend/my-app/src/App.css
+What it does:
+- Styles for board layout, lanes, cards, form, toolbar, and responsive behavior.
+Interview line:
+- "I separated presentation into App.css to keep component logic focused on data and behavior."
+
+18) frontend/my-app/src/index.css
+What it does:
+- Global design tokens and base styles.
+- Defines colors, fonts, and app-wide visual defaults.
+Interview line:
+- "I keep global theme variables in one place to make UI iteration faster and consistent."
+
+19) frontend/my-app/.env.example
+What it does:
+- Defines frontend API base URL variable template.
+Interview line:
+- "The frontend uses VITE_API_BASE_URL so environments can point to different backends without code changes."
+
+
+API CONTRACT SUMMARY
+====================
+
+GET /health
+- Used for service/db health checks.
+
+GET /api/stories
+- Returns all stories.
+
+POST /api/stories
+- Creates one story.
+- Requires code, title, points, ownerName, ownerTag, priority, kind, dueDate, status.
+
+PATCH /api/stories/:id
+- Partial update of story fields (commonly status moves).
+
+DELETE /api/stories/:id
+- Removes a story.
+
+Interview line:
+- "I kept REST endpoints small and predictable to align with board interactions and make frontend integration straightforward."
+
+
+INTERVIEW TALK TRACK (60-90 SECONDS)
+====================================
+"I built a Rally-style board as a full-stack app using React on the frontend and Express on the backend. The frontend fetches stories, groups them by status lanes, and supports create, move, delete, search, and priority filtering. On the backend, I added validation, DTO mapping, and REST endpoints for story CRUD. I designed the database schema with constraints and indexing for data integrity and lane-query performance. I also added a small database adapter layer so the app can run on MySQL by default while still supporting PostgreSQL mode, which improved portability with minimal business logic changes."
+
+
+POSSIBLE FOLLOW-UP QUESTIONS + STRONG ANSWERS
+==============================================
+Q1) Why both API validation and DB constraints?
+A) API validation gives fast user-facing errors; DB constraints guarantee integrity even if another client bypasses API checks.
+
+Q2) Why a DB adapter layer?
+A) To isolate engine-specific behavior and keep route/business code stable.
+
+Q3) What would you improve next?
+A) Add auth, drag-and-drop interactions, pagination/filter APIs, and integration tests for CRUD endpoints.
+
+Q4) How do you handle production config?
+A) Through environment variables and separate deployment-specific .env values.
+
+Q5) How would you test this deeper?
+A) Add API integration tests with a test database, plus frontend component tests for form submission and lane updates.
