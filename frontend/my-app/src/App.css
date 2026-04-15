@@ -116,6 +116,53 @@ h1 {
   box-shadow: 0 10px 18px rgba(23, 26, 30, 0.15);
 }
 
+.composer-wrap {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: 1rem;
+  padding: 0.8rem;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.composer-input {
+  background: #f9fbfa;
+  border: 1px solid var(--edge);
+  color: var(--heading-color);
+  border-radius: 0.65rem;
+  font-family: var(--sans);
+  padding: 0.52rem 0.62rem;
+}
+
+.composer-input.title {
+  grid-column: span 2;
+}
+
+.composer-input.points {
+  max-width: 5.5rem;
+}
+
+.composer-input:focus-visible,
+.status-select:focus-visible,
+.filter-select:focus-visible,
+.delete-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.primary-btn.submit {
+  border: 0;
+}
+
+.primary-btn.submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .summary-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -186,6 +233,10 @@ h1 {
   border-color: transparent;
 }
 
+.filter-select {
+  appearance: none;
+}
+
 .board-search {
   min-width: min(24rem, 100%);
   background: var(--surface);
@@ -206,6 +257,26 @@ h1 {
 .primary-btn:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
+}
+
+.error-banner,
+.loading-banner {
+  margin: 0;
+  border-radius: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.error-banner {
+  background: rgba(213, 59, 75, 0.12);
+  border: 1px solid rgba(213, 59, 75, 0.24);
+  color: #8f2030;
+}
+
+.loading-banner {
+  background: rgba(63, 107, 205, 0.1);
+  border: 1px solid rgba(63, 107, 205, 0.2);
+  color: #304f95;
 }
 
 .board {
@@ -348,6 +419,7 @@ h1 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .avatar {
@@ -365,6 +437,28 @@ h1 {
 .owner-name {
   color: var(--muted);
   font-size: 0.75rem;
+  margin-right: auto;
+}
+
+.status-select {
+  border: 1px solid var(--edge);
+  border-radius: 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  color: var(--heading-color);
+  background: #f8faf9;
+  padding: 0.2rem 0.35rem;
+}
+
+.delete-btn {
+  border: 1px solid rgba(213, 59, 75, 0.26);
+  color: #8f2030;
+  background: rgba(213, 59, 75, 0.08);
+  border-radius: 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.67rem;
+  padding: 0.18rem 0.4rem;
+  cursor: pointer;
 }
 
 @keyframes lane-fade {
@@ -390,6 +484,14 @@ h1 {
 }
 
 @media (max-width: 1120px) {
+  .composer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .composer-input.title {
+    grid-column: span 2;
+  }
+
   .summary-strip,
   .board {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -404,6 +506,14 @@ h1 {
 @media (max-width: 760px) {
   .rally-shell {
     padding: 1rem;
+  }
+
+  .composer {
+    grid-template-columns: 1fr;
+  }
+
+  .composer-input.title {
+    grid-column: span 1;
   }
 
   .topbar {

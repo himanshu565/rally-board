@@ -1,21 +1,27 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Rally Board backend API",
+  "main": "src/server.js",
   "scripts": {
-    "test": "jest"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "jest",
+    "db:seed": "node src/db/seed.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "node": "^25.9.0",
-    "nodemon": "^3.1.14"
+    "mysql2": "^3.15.2",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
-    "jest": "^30.3.0"
+    "jest": "^30.3.0",
+    "nodemon": "^3.1.14"
   }
 }
