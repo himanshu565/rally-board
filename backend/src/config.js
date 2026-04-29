@@ -20,3 +20,4 @@ if (config.dbClient === "postgres" && !config.databaseUrl) {
 }
 
 module.exports = config;
+

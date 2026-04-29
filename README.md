@@ -46,3 +46,4 @@ Frontend starts at `http://localhost:5173` and reads API URL from `VITE_API_BASE
 - Delete stories
 - Search and priority filter
 - Live board stats from backend data
+
